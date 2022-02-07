@@ -1,0 +1,88 @@
+{% extends "base_generic.html" %}
+
+{% block content %}
+<div class="signup-form">
+    
+    <form action="" method="post">
+        {% csrf_token %}
+    
+    <div class="input-group">
+        <span class="input-group-text">First and last name</span>
+        <input type="text" name="sFirstName" aria-label="First name" class="form-control">
+        <input type="text" name="sLastName" aria-label="Last name" class="form-control">
+        {% for error in form.sFirstName.errors %}
+        <p>{{ error | escape}}</p>
+        {% endfor %}
+        {% for error in form.sLastName.errors %}
+        <p>{{ error | escape}}</p>
+        {% endfor %}
+    </div>
+
+    <div class="input-group mb-3">
+        <span class="input-group-text" id="basic-addon1">@</span>
+        <input type="text" name="sUsername" class="form-control" placeholder="Username" aria-label="Username"
+            aria-describedby="basic-addon1">
+
+        {% for error in form.sUsername.errors %}
+        <p>{{ error | escape}}</p>
+        {% endfor %}
+    </div>
+
+    <div class="input-group mb-3">
+        <span class="input-group-text">Enter Your Email</span>
+        <input type="email" name="sEmail" class="form-control" placeholder="Email" aria-label="Recipient's username"
+            aria-describedby="basic-addon2">
+        <!-- <span class="input-group-text" id="basic-addon2">@gmail    .com</span> -->
+        {% for error in form.sEmail.errors %}
+        <p>{{ error | escape}}</p>
+        {% endfor %}
+    </div>
+
+    <div class="input-group mb-3">
+        <input type="password" name="sPassword" class="form-control" placeholder="Password">
+        <input type="password" name="sConfirmPassword" class="form-control" placeholder="Confirm Password">
+        {% for error in form.sPassword.errors %}
+        <p>{{ error | escape}}</p>
+        {% endfor %}
+        {% for error in form.sConfirmPassword.errors %}
+        <p>{{ error | escape}}</p>
+        {% endfor %}
+    </div>
+
+    <div class="input-group mb-3 fac" style="width: 100%;height: 20px;">
+        <input type="submit" class="btn btn-success" value="Signup">
+    </div>
+
+    </form>
+</div>
+
+    <!-- <form action="" method="post">
+        {% csrf_token %}
+        <input type="text" name="sFirstName" placeholder="Enter First Name">
+        {% for error in form.sFirstName.errors %}
+        <p>{{ error | escape}}</p>
+        {% endfor %}
+        <input type="text" name="sLastName" placeholder="Enter Last Name">
+        {% for error in form.sLastName.errors %}
+        <p>{{ error | escape}}</p>
+        {% endfor %}
+        <input type="text" name="sUsername" placeholder="Username" id="_username">
+        {% for error in form.sUsername.errors %}
+        <p>{{ error | escape}}</p>
+        {% endfor %}
+        <input type="email" name="sEmail" placeholder="Enter Your Email ID" id="_email">
+        {% for error in form.sEmail.errors %}
+        <p>{{ error | escape}}</p>
+        {% endfor %}
+        <input type="password" name="sPassword" placeholder="Enter Password" id="_password">
+        {% for error in form.sPassword.errors %}
+        <p>{{ error | escape}}</p>
+        {% endfor %}
+        <input type="password" name="sConfirmPassword" placeholder="Confirm Password" id="_confirmPassword">
+        {% for error in form.sConfirmPassword.errors %}
+        <p>{{ error | escape}}</p>
+        {% endfor %}
+        <input type="submit" value="Signup">
+    </form> -->
+
+{% endblock %}

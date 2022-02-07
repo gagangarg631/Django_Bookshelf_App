@@ -1,0 +1,45 @@
+{% extends "base_generic.html" %}
+
+{% block content %}
+
+<form enctype="multipart/form-data" id="addBookForm" class="upload-book-form" action="/books/add-new-book/" method="POST">
+    {% csrf_token %}
+    <div class="upload-book-box" style="display: flex;">
+        <div class="bd input-gps" style="width: 500px;">
+            <div class="input-group mb-3" style="height: 100px;width: 100%;">
+                <label class="input-group-text" style="width: 200px;cursor: pointer;" for="inputGroupFile01">
+                    <img src="/static/Images/bg/upload_pic.jpg" height="100px" width="200px" alt="">
+                </label>
+                <input type="file" multiple name="sPdf" class="form-control" id="inputGroupFile01">
+            </div>
+            {% for error in form.sPdf.errors %}
+                <p>{{ error | escape}}</p>
+            {% endfor %}
+            <div class="input-group">
+                <input type="text" name="sName" aria-label="First name" placeholder="Enter Book Name"
+                    class="form-control" value="">
+            </div>
+            {% for error in form.sName.errors %}
+                <p>{{ error | escape}}</p>
+            {% endfor %}
+            <input class="p0" type="hidden" name="sAllTags" value="" id="_hiddenTagField">
+            <div class="input-group">
+                <span class="input-group-text">Enter Book Tags (press space after each tag)</span>
+                <input type="text" name="" id="_tags" aria-label="First name" class="form-control">
+            </div>
+        </div>
+        <div class="bd submitButton" style="width: 200px;">
+            <input type="image" src="/static/Images/bg/bg-free-upload-btn.png" width="100%" height="100%" alt="">
+        </div>
+    </div>
+    <div class="added_tags">
+        
+    </div>
+</form>
+
+{% endblock %}
+
+{% block js_files %}
+    {% load static %}
+    <script src="{% static '/JS/upload_book.js' %}"></script>
+{% endblock %}

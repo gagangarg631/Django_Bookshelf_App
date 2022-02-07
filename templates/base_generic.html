@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We" crossorigin="anonymous">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <link rel="shortcut icon" href="/static/Images/bookshelf_icon.png" type="image/x-icon">
+    <title>Bookshelf to store your books and manage them</title>
+    {% load static %}
+    {% load cache %}
+    <link rel="stylesheet" href="{% static 'CSS/style.css' %}">
+    <link rel="stylesheet" href="{% static 'CSS/util.css' %}">
+</head>
+
+<body>
+
+    {% block navbar %}
+    <nav style="caret-color: transparent" class="topNavbar navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container-fluid">
+            <a class="navbar-brand logo" href="{% url 'home' %}">
+                <img src="/static/Images/bg/logo.png" width="170px" alt="">
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
+                aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item black-hover">
+                        <a class="nav-link active" aria-current="page" href="{% url 'home' %}">Home</a>
+                    </li>
+                </ul>
+
+                {% if request.user.is_authenticated %}
+                <ul class="navbar-nav fac">
+                    <span class="btn-primary fac" style="border-radius: 10px;">
+                        <span class="btn btn-primary" onclick="toggleBooksSelection(event)" style="font-size: 18px;display: inline-block;" data-bs-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample">
+                            <strong>Select Books</strong>
+                            <span class="fac select-books-options" style="display: none;">
+                                <span class="mlr0" style="color: yellow;">
+                                    <strong id="select-books-count-text">0</strong>
+                                </span>
+                            </span>
+                        </span>
+                        <span class="mlr0 select-books-options" style="height: 100%;display: none;">
+                            <span class="mlr0" id="select-all-books" 
+                                    style="border: 1px solid white;border-radius:5px;width: 20px;height: 20px;background-color: white;display: inline-block;">
+                            </span>
+                        </span>
+                    </span>
+                </ul>
+    
+                {% if request.user.first_name %}
+                <div class="profileIcon black-hover">
+                    <p style="margin: auto;"><strong>Hello </strong>{{request.user.first_name | capfirst}}</p>
+                </div>
+                {% endif %}
+
+                <ul class="navbar-nav">
+                    <li class="nav-item yellow-hover">
+                        <button>SS</button>
+                    </li>
+                    <li class="nav-item yellow-hover addBookButton">
+                        <a href="{% url 'add-book' %}" class="nav-link">
+                            <img src="/static/Images/add_book_button.png" height="40px" alt="">
+                        </a>
+                    </li>
+                </ul>
+
+                <form class="d-flex searchBoxForm" action="/books/search">
+                    <input id="searchField" name="query" class="searchBoxChild form-control" type="search"
+                        placeholder="Search" aria-label="Search">
+                    <button id="searchButton" class="searchBoxChild btn btn-outline-success"
+                        type="submit">Search</button>
+                </form>
+                {% endif %}
+
+                <ul class="navbar-nav">
+                    {% if request.user.is_authenticated %}
+                    <li class="nav-item green-hover">
+                        <a href="{% url 'logout' %}" class="nav-link"><strong>Logout</strong></a>
+                    </li>
+                    {% else %}
+                    <li class="nav-item green-hover">
+                        <a href="{% url 'login' %}" class="nav-link"><strong>Login</strong></a>
+                    </li>
+                    <li class="nav-item green-hover">
+                        <a href="{% url 'signup' %}" class="nav-link"><strong style="color: green;">Signup</strong></a>
+                    </li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+    </nav>
+    
+    
+    {% endblock %}
+    <div class="content">{% block content %}{% endblock %}</div>
+
+    {% block js_files %}
+    {% load static %}
+    <script src="{% static '/JS/search.js' %}"></script>
+    {% endblock %}
+
+    {% block bootstrap_files %}
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-U1DAWAznBHeqEIlVSCgzq+c9gqGAJn5c/t99JyeKa9xxaYpSvHU5awsuZVVFIhvj"
+        crossorigin="anonymous"></script>
+    {% endblock %}
+</body>
+
+</html>

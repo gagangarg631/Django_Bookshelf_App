@@ -1,0 +1,28 @@
+{% extends "base_generic.html" %}
+
+{% block content %}
+
+<div class="query-books-found">
+    {% for book in books %}
+        <a href="{% url 'show-pdf' id=book.id %}">
+            <div class="searched-book-box p0">
+                <div class="gbd searched-book-card m0 bd">
+                    <div class="bd s-book-img-box">
+                        <img src="{{ book.getPdfImgUrl }}" height="100%" width="100%" alt="">
+                    </div>
+                    <div class="bd s-book-text-box">
+                        <p><strong>{{ book.name }}</strong></p>
+                    </div>
+                </div>
+            </div>
+        </a>
+        {% endfor %}
+        {% if books|length_is:"0" %}
+            <div class="query-not-found">
+                <p><strong>No Books Found Related to {{ query }}</strong></p>
+            </div>
+        {% endif %}
+</div>
+
+
+{% endblock %}

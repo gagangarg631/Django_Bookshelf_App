@@ -1,0 +1,50 @@
+{% extends "base_generic.html" %}
+
+{% block content %}
+<div class="login-form">
+    
+    <form action="" method="post">
+        {% csrf_token %}
+        
+        <div class="input-group mb-3">
+            <span class="input-group-text">Enter Username</span>
+            <input type="text" name="sUsername" class="form-control" placeholder="Username">
+            {% for error in form.sUsername.errors %}
+            <p>{{ error | escape}}</p>
+            {% endfor %}
+        </div>
+
+        <div class="input-group mb-3">
+            <span class="input-group-text">Enter Password</span>
+            <input type="password" name="sPassword" class="form-control" placeholder="Password">
+            {% for error in form.sPassword.errors %}
+            <p>{{ error | escape}}</p>
+            {% endfor %}
+        </div>
+
+        <div class="input-group mb-3 fac" style="width: 100%;height: 20px;">
+            <input type="submit" class="btn btn-success" value="Login">
+        </div>
+
+        {% if invalid_user %}
+            <br><hr><hr>
+            <div class="invalid-user-msg-box fac" style="font-size: 15px;color: red;">
+                <p><strong>{{ invalid_user }}</strong></p>
+            </div>
+        {% endif %}
+
+    </form>
+</div>
+
+    <!-- <div class="login-form">
+        <form action="">
+            {% csrf_token %}
+            <label for="_username">UserName: </label>
+            <input type="text" name="sUsername" id="_username">
+            <label for="_password">Password: </label>
+            <input type="password" name="sPassword" id="_password">
+            <input type="submit" value="Login">
+
+        </form>
+    </div> -->
+{% endblock %}
