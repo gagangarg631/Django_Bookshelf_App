@@ -24,7 +24,7 @@ to disk. Multiple users can concurrently use the web application to access their
 
 first switch to the directory where you want to store it,then open terminal and run the following commands - 
 
-<strong style="color:blue;">
+<strong>
 git clone https://github.com/gagangarg631/Django_Bookshelf_App
 
 cd Django_Bookshelf_App <br>
@@ -39,4 +39,25 @@ python manage.py runserver <br>
 </strong>
 
 then copy & paste the url shown in the terminal in your browser
+
+
+<strong>Setup on Windows (most of the work is same as linux)</strong>
+
+first switch to the directory where you want to store it,then open cmd and run the following commands - 
+
+<strong>
+git clone https://github.com/gagangarg631/Django_Bookshelf_App
+
+cd Django_Bookshelf_App <br>
+download and install python in your pc and set to path and open cmd
+  
+pip install virtualenv <br>
+virtualenv new_virtual_env_name <br>
+new_virtual_env_name\Scripts\activate <br>
+
+pip install -r requirements.txt <br>
+python manage.py runserver <br>
+</strong>
+
+then copy & paste the url shown in the cmd in your browser
 
