@@ -203,9 +203,7 @@ def home(request,_category=None):
     if _category is None:
         # send tags as cookies to client 
         tag_names = list(Tags.objects.filter(book__user__exact=request.user).values_list('tag',flat=True).distinct())
-        response = render(request, 'home.html', { 
-            ''
-        })
+        response = render(request, 'home.html', {})
         response.set_cookie('tags',tag_names)
 
 
