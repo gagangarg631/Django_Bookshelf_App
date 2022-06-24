@@ -34,8 +34,8 @@ def shareMultiple(request, books_id, share_to):
         _book = Book.objects.get(id=_id)
         if SharedWithMe.objects.filter(user__exact=share_to_user, book__exact=_book):
             books_alr_shared.append(_book.name)
-            for i in SharedWithMe.objects.filter(user__exact=share_to_user, book__exact=_book):
-                print(i.book.name)
+            # for i in SharedWithMe.objects.filter(user__exact=share_to_user, book__exact=_book):
+            #     print(i.book.name)
         else:
             sh = SharedWithMe(user=share_to_user, book=_book, shared_by=request.user)
             sh.save()

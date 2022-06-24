@@ -146,9 +146,9 @@ Array.from(document.querySelectorAll('.carousel')).forEach(cc => {
 
 // reload page when user switch from other browser tab to this web tab
 document.addEventListener("visibilitychange", function() {
-    // if (document.visibilityState === 'visible') {
-    //     this.location.reload();
-    // }
+    if (document.visibilityState === 'visible') {
+        this.location.reload();
+    }
   });
 
 

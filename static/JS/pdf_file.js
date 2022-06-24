@@ -16,7 +16,7 @@ window.addEventListener('beforeunload', function (e) {
         return res.text();
     }).then(function(t){
         console.log(t);
-        // window.location.href('/')
+        window.location.href('/')
     })
     
     // e.returnValue = ""
