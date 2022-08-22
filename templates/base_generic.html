@@ -11,9 +11,8 @@
     <link rel="shortcut icon" href="/static/Images/bookshelf_icon.png" type="image/x-icon">
     <title>Bookshelf to store your books and manage them</title>
     {% load static %}
-    {% load cache %}
-    <link rel="stylesheet" href="{% static 'CSS/style.css' %}">
-    <link rel="stylesheet" href="{% static 'CSS/util.css' %}">
+    <link href="{% static 'CSS/style.css' %}">
+    <link href="{% static 'CSS/util.css' %}">
 </head>
 
 <body>
@@ -103,7 +102,6 @@
     <div class="content">{% block content %}{% endblock %}</div>
 
     {% block js_files %}
-    {% load static %}
     <script src="{% static '/JS/search.js' %}"></script>
     {% endblock %}
 
