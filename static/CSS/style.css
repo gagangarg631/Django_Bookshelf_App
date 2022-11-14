@@ -4,8 +4,8 @@
 }
 
 body{
-    background: url('/static/Images/background_pic.jpg');
-    
+    /* background: url('/static/Images/background_pic.jpg'); */
+    background-color: white;
     background-size: 100% 130%;
     background-repeat: no-repeat;
     background-attachment: fixed;

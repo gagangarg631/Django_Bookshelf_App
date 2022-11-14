@@ -5,7 +5,6 @@ from .helper import saveFirstPage,getBookTitle
 from django.conf import settings
 from django.http import HttpResponse,FileResponse
 from .forms import AddBookForm
-from reportlab.pdfgen import canvas
 from django.db.models import Min,Max,Sum
 from collections import OrderedDict
 
@@ -315,48 +314,50 @@ def addBook(request):
             book_name = data['sName']
             pdf_file = data['sPdf']
             tags = data['sAllTags']
+            try:
+                for _file in request.FILES.getlist('sPdf'):
+                    if type(_file) == TemporaryUploadedFile:
+                        title = getBookTitle(_file.temporary_file_path())
+                    elif type(_file) == InMemoryUploadedFile:
+                        title = getBookTitle(_file)
 
-            for _file in request.FILES.getlist('sPdf'):
-                if type(_file) == TemporaryUploadedFile:
-                    title = getBookTitle(_file.temporary_file_path())
-                elif type(_file) == InMemoryUploadedFile:
-                    title = getBookTitle(_file)
+                    # customize book title
+                    title = str(title)
+                    if ':' in title:
+                        title = title[0:title.index(':')]
+                    else:
+                        words_arr = title.split(" ")
+                        words_arr = words_arr[0:4 if len(words_arr) >= 4 else len(words_arr)]
 
-                # customize book title
-                title = str(title)
-                if ':' in title:
-                    title = title[0:title.index(':')]
-                else:
-                    words_arr = title.split(" ")
-                    words_arr = words_arr[0:4 if len(words_arr) >= 4 else len(words_arr)]
+                        title = " ".join(words_arr)
 
-                    title = " ".join(words_arr)
+                    title = re.sub(r'[^A-Za-z0-9\s]',"",title)
 
-                title = re.sub(r'[^A-Za-z0-9\s]',"",title)
+                    book = Book(user=request.user,name=title)
+                    book.save()
 
-                book = Book(user=request.user,name=title)
-                book.save()
+                    _name = str(book.id)     # + str(book.id) + "_".join(book.name.split(" "))
+                    _file.name = _name + ".pdf"
+                    book.pdf = _file
+                    book.save()
 
-                _name = str(book.id)     # + str(book.id) + "_".join(book.name.split(" "))
-                _file.name = _name + ".pdf"
-                book.pdf = _file
-                book.save()
+                    tagList = tags.split(" ")
 
-                tagList = tags.split(" ")
+                    for tag in tagList:
+                        if len(tag.strip()) > 0:
+                            newTag = Tags(book=book,tag=tag)
+                            newTag.save()
 
-                for tag in tagList:
-                    if len(tag.strip()) > 0:
-                        newTag = Tags(book=book,tag=tag)
-                        newTag.save()
+                    # create and save first page of pdf as image (jpg)
+                    pdf_file_path = os.path.join(str(settings.MEDIA_ROOT), str(book.pdf))
+                    img_output_dir = os.path.join(str(settings.MEDIA_ROOT), constant.IMAGE_FOLDER_NAME)
+                    if not os.path.isdir(img_output_dir):
+                        os.mkdir(img_output_dir)
+                    img_name = _name
 
-                # create and save first page of pdf as image (jpg)
-                pdf_file_path = os.path.join(str(settings.MEDIA_ROOT), str(book.pdf))
-                img_output_dir = os.path.join(str(settings.MEDIA_ROOT), constant.IMAGE_FOLDER_NAME)
-                if not os.path.isdir(img_output_dir):
-                    os.mkdir(img_output_dir)
-                img_name = _name
-
-                saveFirstPage(pdf_file_path, img_output_dir, img_name)
+                    saveFirstPage(pdf_file_path, img_output_dir, img_name)
+            except Exception as e:
+                print(e)
 
             return redirect('home')
                 

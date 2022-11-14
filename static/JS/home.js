@@ -58,6 +58,11 @@ function loadNext(obs){
         loadBooksForTag(obs,_tag);
         index++;
     }
+    if (index == 1){
+        let _tag = tags[index].replace(/[^A-Za-z_]/g,"")
+        loadBooksForTag(obs,_tag);
+        index++;
+    }
 }
 
 
@@ -273,3 +278,7 @@ function showPdf(ev,aTag){
 }
 window.showPdf = showPdf;
 
+window.addEventListener('load', function(){
+    const body_colors = ['#21096a', '#ef9919', 'rgb(127 25 239)', '#0148cbb0'];
+    this.document.body.style.backgroundColor = body_colors[Math.floor(Math.random() * body_colors.length)];
+})
