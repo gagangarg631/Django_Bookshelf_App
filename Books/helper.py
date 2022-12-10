@@ -2,9 +2,27 @@ import os
 from PyPDF2 import PdfFileReader, PdfFileWriter
 
 from pdf2image import convert_from_path
-
+from thumbnail import generate_thumbnail
 import random
 import string
+
+def saveThumbnail(in_file, out_file, img_name):
+    name,ext = os.path.splitext(in_file)
+    out_file = os.path.join(out_file, img_name + ".jpg")
+    if ext == ".mp4":
+        options = {
+            'trim': False,
+            'height': 300,
+            'width': 300,
+            'quality': 85,
+            'type': 'thumbnail'
+        }
+        
+        generate_thumbnail(in_file, out_file, options)
+    
+    elif ext == ".pdf":
+        pass
+
 
 def toImage(path,outputDir,fileName):
     images = convert_from_path(path)

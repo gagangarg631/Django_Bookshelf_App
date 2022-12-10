@@ -3,7 +3,7 @@ from pyexpat import model
 from statistics import mode
 from django.db import models
 from django.conf import settings
-
+import os
 
 class Book(models.Model):
     name = models.CharField(verbose_name='Book Name',max_length=100,null=True)
@@ -21,8 +21,10 @@ class Book(models.Model):
         
     def getPdfImgUrl(self):
         pdfUrl = str(self.pdf.url)
+        print(pdfUrl)
         temp = pdfUrl.replace('pdf','pdfFirstPageImg',1)
         temp = temp.replace('.pdf','.jpg',1)
+        temp = temp.replace('.mp4','.jpg', 1)
         return temp
 
     def getFileName(self):
@@ -44,6 +46,10 @@ class Book(models.Model):
         
     def getBookId(self):
         return self.id
+
+    def getExtension(self):
+        name, extension = os.path.splitext(self.pdf.name)
+        return extension
 
 
 class Tags(models.Model):

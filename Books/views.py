@@ -1,7 +1,7 @@
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import redirect, render,reverse
 from .models import Book,Tags,SharedWithMe #,OpenTimings
-from .helper import saveFirstPage,getBookTitle
+from .helper import saveFirstPage,getBookTitle, saveThumbnail
 from django.conf import settings
 from django.http import HttpResponse,FileResponse
 from .forms import AddBookForm
@@ -106,7 +106,7 @@ def deleteBook(request,id):
     bk_path = getFullPath(id)
     temp = bk_path.replace(constant.PDF_FOLDER_NAME, constant.IMAGE_FOLDER_NAME, 1)
     img_path = temp.replace(constant.PDF_EXTENSION, constant.IMAGE_EXTENSION, 1)
-
+    img_path = temp.replace(constant.VIDEO_EXTENSION, constant.IMAGE_EXTENSION)
     if os.path.exists(bk_path):
         os.remove(bk_path)
     if os.path.exists(img_path):
@@ -151,7 +151,9 @@ def pdfClosed(request):
 # @cache_page(30)
 @login_required
 def showPdf(request,id):
-    path_with_ext = os.path.join(constant.PDF_FOLDER_NAME, str(id) + ".pdf")
+    _qSet = Book.objects.filter(id=id,user__exact=request.user)
+    file_name,xtension = os.path.splitext(_qSet.first().pdf.name)
+    path_with_ext = os.path.join(constant.PDF_FOLDER_NAME, str(id) + xtension)
 
     filepath = os.path.join('media', path_with_ext)
 
@@ -159,7 +161,7 @@ def showPdf(request,id):
 
     current_book = None
 
-    _qSet = Book.objects.filter(id=id,user__exact=request.user)
+    
     if _qSet.exists():
         current_book = _qSet.first()
     else:
@@ -170,8 +172,10 @@ def showPdf(request,id):
 
     # return FileResponse(open(filepath, 'rb'), content_type='application/pdf')
     
+    file_name,xtension = os.path.splitext(filepath)
     context = {
-        'pdf_path': filepath
+        'pdf_path': filepath,
+        'xtension': xtension
     }
 
     return render(request,'pdf_reader.html',context)
@@ -316,10 +320,19 @@ def addBook(request):
             tags = data['sAllTags']
             try:
                 for _file in request.FILES.getlist('sPdf'):
-                    if type(_file) == TemporaryUploadedFile:
-                        title = getBookTitle(_file.temporary_file_path())
-                    elif type(_file) == InMemoryUploadedFile:
-                        title = getBookTitle(_file)
+                    file_name,xtension = os.path.splitext(_file.name)
+                    if xtension == ".pdf":
+                        if type(_file) == TemporaryUploadedFile:
+                            title = getBookTitle(_file.temporary_file_path())
+                        elif type(_file) == InMemoryUploadedFile:
+                            title = getBookTitle(_file)
+                    elif xtension == ".mp4":
+                        title = _file.name
+                    else:
+                        # return form with error unrecognized file (mp4 or pdf)
+                        pass
+                    
+                    
 
                     # customize book title
                     title = str(title)
@@ -337,7 +350,8 @@ def addBook(request):
                     book.save()
 
                     _name = str(book.id)     # + str(book.id) + "_".join(book.name.split(" "))
-                    _file.name = _name + ".pdf"
+                    _file.name = _name + xtension
+                    print(_file.name)
                     book.pdf = _file
                     book.save()
 
@@ -355,7 +369,12 @@ def addBook(request):
                         os.mkdir(img_output_dir)
                     img_name = _name
 
-                    saveFirstPage(pdf_file_path, img_output_dir, img_name)
+                    if xtension == ".pdf":
+                        saveFirstPage(pdf_file_path, img_output_dir, img_name)
+                    elif xtension == ".mp4":
+                        # save thumbnail of video file to show in frontend page
+                        saveThumbnail(pdf_file_path, img_output_dir, img_name)
+
             except Exception as e:
                 print(e)
 

@@ -15,6 +15,7 @@
                             
                             <div class="book-content" style="height: 100%;">
                                 <input type="hidden" name="" value="{{ book.id }}">
+                                
                                 <a onclick="showPdf(event,this)" name="show-pdf-link" href="{% url 'show-pdf' id=book.id %}" target="_blank">
                                     <div class="book-img-box imageContent">
                                         <img class="book-img" src="{{ book.getPdfImgUrl }}" width="100%" height="100%"
