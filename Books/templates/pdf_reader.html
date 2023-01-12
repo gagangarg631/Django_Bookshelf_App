@@ -9,7 +9,7 @@
         {% if xtension == ".pdf" %}
             <embed src="/{{ pdf_path }}" width="100%" height="625px" type="application/pdf">
         {% else %}
-            <video autoplay muted src="/{{ pdf_path }}" width="100%" height="625px"></video>
+            <video controls src="/{{ pdf_path }}" width="100%" height="625px"></video>
         {% endif %}
     </div>
 
